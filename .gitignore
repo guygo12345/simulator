@@ -1,0 +1,6 @@
+.idea
+.ipynb_checkpoints
+*ipnynb
+old_stuff
+*.pyc
+output*
