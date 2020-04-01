@@ -1,6 +1,6 @@
-Welcome to Vidar carla simulator
+# Welcome to the Vidar simulator project
 
-To run the simulator run:
+## To run the simulator in terminal:
 
 cd ~/simulator/gen_dumps/carla_scripts
 
