@@ -20,6 +20,7 @@ from __future__ import print_function
 import sys
 import glob
 import os
+sys.path.append(os.getcwd() + "/../")
 
 try:
     sys.path.append(glob.glob('/home/itayb/simulator/carla_0.98/PythonAPI/carla/dist/carla-*%d.%d-%s.egg' % (
