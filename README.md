@@ -5,3 +5,5 @@ To run the simulator run:
 cd ~/simulator/gen_dumps/carla_scripts
 
 python3 simulator.py
+
+To watch all options run with '-h'
