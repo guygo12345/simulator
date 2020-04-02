@@ -21,15 +21,11 @@ import sys
 import glob
 import os
 sys.path.append(os.getcwd() + "/../")
-
-
 sys.path.append(glob.glob('/home/itayb/simulator/carla_0.98/PythonAPI/carla/dist/carla-*%d.%d-%s.egg' % (
                             sys.version_info.major,
                             sys.version_info.minor,
                             'linux-x86_64'))[0])
-
 import carla
-
 import argparse
 import logging
 import random
@@ -40,11 +36,12 @@ import pygame
 from carla_scripts.Sensors import *
 from carla_scripts.Utils import *
 from carla_scripts.cameras import *
-
+from carla_scripts.carla_utils import *
 
 # ==============================================================================
 # -- Simulator ---------------------------------------------------------------------
 # ==============================================================================
+
 
 class Simulator(object):
     def __init__(self, client, hud, args):

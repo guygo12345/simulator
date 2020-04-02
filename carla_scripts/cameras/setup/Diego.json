@@ -25,7 +25,7 @@
 		"height": 310,
 		"focal": 728.5,
 		"scale": 2.0,
-		"cams" : ["parking_front"]
+		"cams" : ["main", "frontCornerLeft", "frontCornerRight", "parking_front"]
 	},
 	"frontCornerLeft" : {
 		"R_to_main" : [0,-50,0],

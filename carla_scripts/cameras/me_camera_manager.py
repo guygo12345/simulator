@@ -2,9 +2,49 @@ import os
 import json
 import numpy as np
 import cv2
+from scipy.spatial.transform import Rotation
 from os.path import join, exists
-from carla_scripts.Utils.global_utils import get_fov, depth_to_array, euler_angles_from_matrix, matrix_from_euler_angles, to_bgra_array
 import carla
+
+
+def to_bgra_array(image, scale):
+    """Convert a CARLA raw image to a BGRA numpy array."""
+    array = np.frombuffer(image.raw_data, dtype=np.dtype("uint8"))
+    array = np.reshape(array, (image.height, image.width, 4))
+    return cv2.resize(array, (0, 0), fx=float(1 / scale), fy=float(1 / scale)).astype(np.uint8)
+
+
+def depth_to_array(image, scale=None):
+    """
+    Convert an image containing CARLA encoded depth-map to a 2D array containing
+    the depth value of each pixel normalized between [0.0, 1.0].
+    """
+    array = to_bgra_array(image, scale)
+    array = array.astype(np.float32)
+    depth = np.dot(array[:, :, :3], [65536.0, 256.0, 1.0]) # (R + G * 256 + B * 256 * 256)
+    depth /= 16777.215  # (256.0 * 256.0 * 256.0 - 1.0) / 1000
+    if scale:
+        return cv2.resize(depth, (0,0), fx=float(1/scale), fy=float(1/scale), interpolation=cv2.INTER_NEAREST).astype(np.float32)
+    else:
+        return depth.astype(np.float32)
+
+
+def matrix_from_euler_angles(euler_angles, negate_yaw=False):
+    pitch, yaw, roll = euler_angles
+    if negate_yaw:
+        yaw = -yaw
+    r = Rotation.from_euler('xyz', (pitch, yaw, roll), degrees=True)
+    matrix = r.as_matrix()
+    return matrix
+
+
+def euler_angles_from_matrix(rotation_matrix, negate_yaw=False):
+    r = Rotation.from_matrix(rotation_matrix)
+    euler_angles = r.as_euler('xyz')  # X (left-right), Y (up-down), Z (forward-backward)
+    pitch, yaw, roll = np.rad2deg(euler_angles)  # Y (left-right), Z (up-down), X (forward-backward)
+    if negate_yaw:
+        yaw = -yaw
+    return pitch, yaw, roll
 
 
 class MESector(object):
@@ -24,7 +64,7 @@ class MESector(object):
         return self.height * self.scale
 
     def get_fov(self):
-        return get_fov(self.width, self.focal)
+        return np.rad2deg(2.0 * np.arctan(self.width / (2 * self.focal)))
 
 
 class MEView(object):

@@ -33,9 +33,8 @@ Use ARROWS or WASD keys for control.
 
 import pygame
 import os
-from .global_utils import *
+from carla_scripts.carla_utils import *
 import sys
-import random
 import datetime
 import math
 #carla_path = '/home/itayb/simulator/carla_0.98/PythonAPI/carla/dist/carla-0.9.8-py2.7-linux-x86_64.egg' # Use for running via Python2, but youll have bugs in rescaling images with cv2.

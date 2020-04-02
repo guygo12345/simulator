@@ -2,7 +2,7 @@ import weakref
 import sys
 import math
 import collections
-from Utils.global_utils import get_actor_display_name
+from carla_scripts.carla_utils import get_actor_display_name
 import carla
 
 # ==============================================================================
