@@ -49,13 +49,6 @@ def get_actor_display_name(actor, truncate=250):
     return (name[:truncate - 1] + u'\u2026') if len(name) > truncate else name
 
 
-def get_camera_setups(sector='main', car_name='Alfred'):
-    conf_file_path = 'cameras/{car_name}.json'.format(car_name=car_name)
-    with open(conf_file_path, 'r') as f:
-        sensors = json.load(f)
-    return sensors[sector]
-
-
 def get_fov(width, focal):
     return np.rad2deg(2.0 * np.arctan(width / (2 * focal)))
 
@@ -104,21 +97,10 @@ def depth_to_array(image, scale=None):
         return depth.astype(np.float32)
 
 
-# def get_reverse_RT(RT_view_to_main):
-#     R, T = RT_view_to_main[:3, :3], RT_view_to_main[:3, 3]
-#     reverse_RT_view_to_main = np.r_[np.c_[R.T, np.matmul(-R.T,T)], RT_view_to_main[3].reshape((1,4))]
-#     return reverse_RT_view_to_main
-
-
-def extract_transform_from_matrix(matrix, negate_yaw=False):
-    rotation_matrix = matrix[:3, :3]
+def extract_rotation_from_matrix(rotation_matrix, negate_yaw=False):
     r = Rotation.from_matrix(rotation_matrix)
     euler_angles = r.as_euler('xyz')  # X (left-right), Y (up-down), Z (forward-backward)
     pitch, yaw, roll = np.rad2deg(euler_angles)  # Y (left-right), Z (up-down), X (forward-backward)
     if negate_yaw:
         yaw = -yaw
-    ty, tz, tx = matrix[:3, 3]  # From ME to Carla coordinate system
-    transform = carla.Transform(
-        carla.Location(x=tx, y=ty, z=tz),
-        carla.Rotation(pitch=pitch, yaw=yaw, roll=roll))
-    return transform
+    return pitch, yaw, roll

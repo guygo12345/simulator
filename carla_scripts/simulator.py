@@ -37,13 +37,11 @@ import logging
 import random
 import signal
 import time
-from os.path import join, exists
-from os import mkdir
 import pygame
-import math
 
 from carla_scripts.Sensors import *
 from carla_scripts.Utils import *
+from carla_scripts.cameras import *
 
 
 # ==============================================================================
@@ -81,7 +79,7 @@ class Simulator(object):
         self.closest_vehicle_distance = None
         self.spawn_interval = args.spawn_interval
         self.clip_interval = args.clip_interval
-        self.me_sensor_manager = MESensorManager(self.world, self.player, simulation_id=self.simulation_id,
+        self.me_sensor_manager = MECameraManager(self.world, self.player, simulation_id=self.simulation_id,
                                                  sector=args.sector, car_name=args.car_name)
         self.restarting = False
         self.restart()
@@ -331,109 +329,6 @@ class Simulator(object):
         sleep(0.1)
         self.spawn_npc()
 
-
-class MESensorManager(object):
-    def __init__(self, world, player, simulation_id, sector, car_name, output_dir=None):
-        self.world = world
-        self.player = player
-        if output_dir:
-            self.output_dir = output_dir
-        else:
-            if not exists(os.path.join('output', car_name)):
-                os.mkdir(os.path.join('output', car_name))
-            self.output_dir = os.path.join('output', car_name, sector)
-        self.simulation_id = simulation_id
-        self.sector = sector
-        self.car_name = car_name
-        self.center_view_frame_data_with_depth = None
-        self.sensors_list = []
-
-    def init_sensors(self):
-        for i, sensor_dict in enumerate(get_camera_setups(self.sector, self.car_name)):
-            if sys.version_info[0] < 3:
-                sensor_dict = {k: str(v) if type(v) is unicode else v for (k, v) in sensor_dict.items()}
-            sensor_dict['fov'] = get_fov(sensor_dict['width'], sensor_dict['focal'])
-            sensor = self.sensor_from_dictionary(sensor_dict)
-            sensor.listen(self.get_process_func(sensor_dict))
-
-    def destroy(self):
-        for sensor in self.sensors_list:
-            if sensor is not None:
-                sensor.destroy()
-        self.sensors_list = []
-
-    def sensor_from_dictionary(self, d):
-        if 'scale' in d:
-            scale = float(d['scale'])
-            image_size_x = float(d['width']) * scale
-            image_size_y = float(d['height']) * scale
-        else:
-            image_size_x = d['width']
-            image_size_y = d['height']
-
-        sensor_bp = self.world.get_blueprint_library().find(d['sensor_type'])
-        sensor_bp.set_attribute('image_size_x', str(image_size_x))
-        sensor_bp.set_attribute('image_size_y', str(image_size_y))
-        sensor_bp.set_attribute('fov', str(d['fov']))
-        sensor_bp.set_attribute('sensor_tick', str(d['sensor_tick']))
-
-        cam_matrix = np.array(d['RT_view_to_main'])
-        rts_matrix = np.matmul(cam_matrix, get_reset_matrix())
-
-        negate_yaw = 'rear' in str(d['view_name'])
-        rel_transform = extract_transform_from_matrix(rts_matrix, negate_yaw=negate_yaw)
-
-        sensor = self.world.spawn_actor(sensor_bp, rel_transform, attach_to=self.player)
-        self.sensors_list.append(sensor)
-        return sensor
-
-    def get_process_func(self, sensor_dict):
-        # Makes sure output folders exist
-        if not exists(self.output_dir):
-            mkdir(self.output_dir)
-        simulation_dir_path = join(self.output_dir, self.simulation_id)
-        if not exists(simulation_dir_path):
-            mkdir(simulation_dir_path)
-        cam_dir_path = join(simulation_dir_path, sensor_dict['view_name'])
-        if not exists(cam_dir_path):
-            mkdir(cam_dir_path)
-
-        # Generates the actual listen function run on each clock tick.
-        def process(image):
-            # if sensor_dict['view_name'] == 'frontCornerRight_to_main':
-            #     print('%s: Start process frame %s' % (time.time(), image.frame))
-            gi = image.frame
-            file_path = join(cam_dir_path, '%s_%s_%07d.npz' %
-                             (self.simulation_id, sensor_dict['view_name'], gi))
-            data = {
-                'origin': sensor_dict['origin'],
-                'focal': sensor_dict['focal'],
-                'fov': sensor_dict['fov'],
-                'grab_index': gi,
-                'RT_view_to_main': np.array(sensor_dict['RT_view_to_main']),
-                'clip_name': self.simulation_id
-            }
-            scale = sensor_dict['scale'] if 'scale' in sensor_dict else None
-            if sensor_dict['sensor_type'] == 'sensor.camera.rgb':
-                data['image'] = np.flip(cv2.cvtColor(to_bgra_array(image, scale=scale), cv2.COLOR_BGRA2GRAY), 0)
-            if sensor_dict['sensor_type'] == 'sensor.camera.depth':
-                data['sim_depth'] = np.flip(depth_to_array(image, scale=scale), 0)
-            self.save_frame(file_path, data)
-            # print('Finished process frame %s in sensor: %s - %s' % (image.frame, sensor_dict['view_name'],
-            #                                                      sensor_dict['sensor_type']))
-
-        return process
-
-    def save_frame(self, file_path, data):
-        center_view = "%s_to_%s" % (self.sector, self.sector)
-        if center_view in file_path:
-            if self.center_view_frame_data_with_depth is None:
-                self.center_view_frame_data_with_depth = data
-                return
-            else:
-                data = {**self.center_view_frame_data_with_depth, **data}
-                self.center_view_frame_data_with_depth = None
-        np.savez(file_path, **data)
 
 # ==============================================================================
 # -- game_loop() ---------------------------------------------------------------
