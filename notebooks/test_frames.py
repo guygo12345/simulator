@@ -27,8 +27,8 @@ display(HTML("<style>.container { width:100% !important; }</style>"))
 # -
 
 sim_id = 'last'
-sector = 'frontCornerLeft'
-car_name = 'Alfred'
+sector = 'rearCornerRight'
+car_name = 'Diego'
 
 # +
 base_output_dir = os.path.join('../carla_scripts/output/', car_name, sector)
@@ -99,7 +99,7 @@ rows = int(math.ceil(len(views)/cols)+1)
 fig = plt.figure(figsize=(14,12))
 plt.subplots_adjust(left=0, bottom=0, right=1, top=1, wspace=0.1, hspace=0.2)
 limit0 = 0
-limit1 = -1
+limit1 = 300
 
 ims = []
 for i, view in enumerate(views):
@@ -111,7 +111,7 @@ for i, view in enumerate(views):
     sorted_file_names = os.listdir(full_view_dir)
     sorted_file_names.sort(key=lambda x: re.search('_(\d+)\.npz', x).group(1))
     
-    for j, file_name in enumerate(sorted_file_names[limit0:limit1][::2]):
+    for j, file_name in enumerate(sorted_file_names[limit0:limit1]):
         if file_name.endswith(".npz"):
             file_path = os.path.join(full_view_dir, file_name)
             if len(ims) > j:

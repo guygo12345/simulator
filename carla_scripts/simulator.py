@@ -40,6 +40,7 @@ import time
 from os.path import join, exists
 from os import mkdir
 import pygame
+import math
 
 from carla_scripts.Sensors import *
 from carla_scripts.Utils import *
@@ -76,6 +77,7 @@ class Simulator(object):
         self.recording_start = 0
         self.world.on_tick(hud.on_world_tick)
         self.spawn_process = None
+        self.closest_vehicle_distance = None
         self.spawn_interval = args.spawn_interval
         self.clip_interval = args.clip_interval
         self.me_sensor_manager = MESensorManager(self.world, self.player, simulation_id=self.simulation_id,
@@ -195,12 +197,22 @@ class Simulator(object):
             self.radar_sensor.sensor.destroy()
             self.radar_sensor = None
 
+    def get_closest_vehicle_distance(self):
+        if self.hud.closest_vehicle_distance is None:
+            return 100000
+        return self.hud.closest_vehicle_distance
+
     def get_elapsed_seconds(self):
         return time.time() - self.start_time
         #return int(self.world.get_snapshot().elapsed_seconds)
 
     def restart_if_needed(self):
         need_restart = False
+
+        if self.get_closest_vehicle_distance() <= 2.5:
+            if self.hud.closest_vehicle_distance != self.closest_vehicle_distance:
+                self.closest_vehicle_distance = self.hud.closest_vehicle_distance
+                self.spawn_npc()
 
         if self.clip_interval:
             elapsed_seconds = self.get_elapsed_seconds()

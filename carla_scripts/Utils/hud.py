@@ -123,6 +123,7 @@ class HUD(object):
         self._show_info = True
         self._info_text = []
         self._server_clock = pygame.time.Clock()
+        self.closest_vehicle_distance = None
 
     def on_world_tick(self, timestamp):
         self._server_clock.tick()
@@ -186,8 +187,9 @@ class HUD(object):
         if len(vehicles) > 1:
             self._info_text += ['Nearby vehicles:']
             distance = lambda l: math.sqrt((l.x - t.location.x)**2 + (l.y - t.location.y)**2 + (l.z - t.location.z)**2)
-            vehicles = [(distance(x.get_location()), x) for x in vehicles if x.id != world.player.id]
-            for d, vehicle in sorted(vehicles):
+            vehicles = sorted([(distance(x.get_location()), x) for x in vehicles if x.id != world.player.id])
+            self.closest_vehicle_distance = vehicles[0][0]
+            for d, vehicle in vehicles:
                 if d > 200.0:
                     break
                 vehicle_type = get_actor_display_name(vehicle, truncate=22)
