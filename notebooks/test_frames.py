@@ -24,10 +24,54 @@ import cv2
 import glob
 from IPython.core.display import display, HTML
 display(HTML("<style>.container { width:100% !important; }</style>"))
+# -
+
+sector_to_views = {
+    'main':  
+    [
+        ['main_to_main', True],
+        ['main_to_main', False],
+        ['frontCornerLeft_to_main', False],
+        ['frontCornerRight_to_main', False],
+        ['parking_front_to_main', False]
+    ],
+
+    'frontCornerLeft':
+    [
+        ['frontCornerLeft_to_frontCornerLeft', True],
+        ['frontCornerLeft_to_frontCornerLeft', False],
+        ['parking_front_to_frontCornerLeft', False],
+        ['parking_left_to_frontCornerLeft', False]
+    ],
+    
+    'frontCornerRight':
+    [
+        ['frontCornerRight_to_frontCornerRight', True],
+        ['frontCornerRight_to_frontCornerRight', False],
+        ['parking_front_to_frontCornerRight', False],
+        ['parking_right_to_frontCornerRight', False]
+    ],
+
+    'rearCornerLeft':
+    [
+        ['rearCornerLeft_to_rearCornerLeft', True],
+        ['rearCornerLeft_to_rearCornerLeft', False],
+        ['parking_left_to_rearCornerLeft', False],
+        ['parking_rear_to_rearCornerLeft', False]
+    ],
+
+    'rearCornerRight':
+    [
+        ['rearCornerRight_to_rearCornerRight', True],
+        ['rearCornerRight_to_rearCornerRight', False],
+        ['parking_right_to_rearCornerRight', False],
+        ['parking_rear_to_rearCornerRight', False]
+    ]
+}
 
 # +
 sim_id = 'last'
-sector = 'rearCornerLeft'
+sector = 'rearCornerRight'
 car_name = 'Diego'
 
 base_output_dir = os.path.join('../carla_scripts/output/', car_name, sector)
@@ -41,47 +85,7 @@ print(sim_id)
 
 output_dir = os.path.join(os.getcwd(), base_output_dir, sim_id)
 
-if sector == 'main':    
-    views = [
-        ['main_to_main', True],
-        ['main_to_main', False],
-        ['frontCornerLeft_to_main', False],
-        ['frontCornerRight_to_main', False],
-        ['parking_front_to_main', False]
-    ]
-
-elif sector == 'frontCornerLeft':
-    views = [
-        ['frontCornerLeft_to_frontCornerLeft', True],
-        ['frontCornerLeft_to_frontCornerLeft', False],
-        ['parking_front_to_frontCornerLeft', False],
-        ['parking_left_to_frontCornerLeft', False]
-    ]
-    
-elif sector == 'frontCornerRight':
-    views = [
-        ['frontCornerRight_to_frontCornerRight', True],
-        ['frontCornerRight_to_frontCornerRight', False],
-        ['parking_front_to_frontCornerRight', False],
-        ['parking_right_to_frontCornerRight', False]
-    ]
-
-elif sector == 'rearCornerLeft':
-    views = [
-        ['rearCornerLeft_to_rearCornerLeft', True],
-        ['rearCornerLeft_to_rearCornerLeft', False],
-        ['parking_left_to_rearCornerLeft', False],
-        ['parking_rear_to_rearCornerLeft', False]
-    ]
-
-elif sector == 'rearCornerRight':
-    views = [
-        ['rearCornerRight_to_rearCornerRight', True],
-        ['rearCornerRight_to_rearCornerRight', False],
-        ['parking_right_to_rearCornerRight', False],
-        ['parking_rear_to_rearCornerRight', False]
-    ]
-
+views = sector_to_views[sector]
 
 def process_npz(ax, file_path, depth_image=False):
     f = np.load(file_path)
