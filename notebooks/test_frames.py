@@ -24,13 +24,12 @@ import cv2
 import glob
 from IPython.core.display import display, HTML
 display(HTML("<style>.container { width:100% !important; }</style>"))
-# -
-
-sim_id = 'last'
-sector = 'rearCornerRight'
-car_name = 'Diego'
 
 # +
+sim_id = 'last'
+sector = 'rearCornerLeft'
+car_name = 'Diego'
+
 base_output_dir = os.path.join('../carla_scripts/output/', car_name, sector)
 
 if sim_id == 'last':
@@ -99,7 +98,7 @@ rows = int(math.ceil(len(views)/cols)+1)
 fig = plt.figure(figsize=(14,12))
 plt.subplots_adjust(left=0, bottom=0, right=1, top=1, wspace=0.1, hspace=0.2)
 limit0 = 0
-limit1 = 300
+limit1 = -1
 
 ims = []
 for i, view in enumerate(views):

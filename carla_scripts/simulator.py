@@ -59,6 +59,7 @@ class Simulator(object):
         self.map_id = args.map_id
         self.map = self.world.get_map()
         self.simulation_id = self.map.name + '_' + str(args.id)
+        self.debug = args.debug
         self.hud = hud
         self.player = None
         self.location = None
@@ -242,11 +243,20 @@ class Simulator(object):
 
         return need_restart
 
+    def draw_sensors(self):
+        for sensor in self.me_sensor_manager.sensors_list:
+            self.world.debug.draw_box(carla.BoundingBox(sensor.get_transform().location,
+                                                        carla.Vector3D(0.3, 0.1, 0.1)),
+                                                        sensor.get_transform().rotation, 0.03,
+                                                        carla.Color(255, 0, 0, 0), 0.01)
+
     def tick(self, clock):
         self.hud.tick(self, clock)
         self.short_traffic_lights()
         if self.restart_if_needed():
             return
+        if self.debug:
+            self.draw_sensors()
         self.world.tick()
 
     def short_traffic_lights(self):
