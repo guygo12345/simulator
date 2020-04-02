@@ -1,9 +1,6 @@
 import weakref
 import sys
 import math
-#carla_path = '/home/itayb/simulator/carla_0.98/PythonAPI/carla/dist/carla-0.9.8-py2.7-linux-x86_64.egg' # Use for running via Python2, but youll have bugs in rescaling images with cv2.
-carla_path = '/home/itayb/simulator/carla_0.98/PythonAPI/carla/dist/carla-0.9.8-py3.6-linux-x86_64.egg'
-sys.path.append(carla_path)
 import carla
 
 # ==============================================================================
