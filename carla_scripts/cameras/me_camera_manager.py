@@ -3,7 +3,7 @@ import json
 import numpy as np
 import cv2
 from os.path import join, exists
-from carla_scripts.Utils.global_utils import get_fov, depth_to_array, extract_rotation_from_matrix, to_bgra_array
+from carla_scripts.Utils.global_utils import get_fov, depth_to_array, euler_angles_from_matrix, matrix_from_euler_angles, to_bgra_array
 import carla
 
 
@@ -40,7 +40,7 @@ class MEView(object):
         return self.cam_name == self.sector.sector_name
 
     def get_RT_view_to_main(self):
-        R, T = self.sector.R_to_main, self.T_to_main
+        R, T = matrix_from_euler_angles(self.sector.R_to_main), self.T_to_main
         return np.r_[np.c_[R, T], np.array([0, 0, 0, 1]).reshape((1, 4))]
 
 
@@ -105,10 +105,9 @@ class MECameraManager(object):
         y, z, x = rel_matrix[:3, 3]
         sensor_location = carla.Location(x=x, y=y, z=z)
         negate_yaw = 'rear' in me_view.get_view_name()
-        pitch, yaw, roll = extract_rotation_from_matrix(rel_matrix[:3, :3], negate_yaw)
+        pitch, yaw, roll = me_view.sector.R_to_main
         sensor_rotation = carla.Rotation(pitch=pitch, yaw=yaw, roll=roll)
         rel_transform = carla.Transform(sensor_location, sensor_rotation)
-        print(me_view.get_view_name(), rel_transform)
         sensor = self.world.spawn_actor(sensor_bp, rel_transform, attach_to=self.player)
         self.sensors_list.append(sensor)
         sensor.listen(self.get_process_func(me_view, sensor_type))
@@ -132,8 +131,6 @@ class MECameraManager(object):
 
         # Generates the actual listen function run on each clock tick.
         def process(image):
-            # if sensor_dict['view_name'] == 'frontCornerRight_to_main':
-            #     print('%s: Start process frame %s' % (time.time(), image.frame))
             gi = image.frame
             file_path = join(cam_dir_path, '%s_%s_%07d.npz' %
                              (self.simulation_id, me_view.get_view_name(), gi))
@@ -152,8 +149,6 @@ class MECameraManager(object):
             elif sensor_type == 'sensor.camera.depth':
                 data['sim_depth'] = np.flip(depth_to_array(image, scale=scale), 0)
             self.save_frame(file_path, data)
-            # print('Finished process frame %s in sensor: %s - %s' % (image.frame, sensor_dict['view_name'],
-            #                                                      sensor_dict['sensor_type']))
 
         return process
 

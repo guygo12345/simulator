@@ -22,13 +22,11 @@ import glob
 import os
 sys.path.append(os.getcwd() + "/../")
 
-try:
-    sys.path.append(glob.glob('/home/itayb/simulator/carla_0.98/PythonAPI/carla/dist/carla-*%d.%d-%s.egg' % (
-        sys.version_info.major,
-        sys.version_info.minor,
-        'win-amd64' if os.name == 'nt' else 'linux-x86_64'))[0])
-except IndexError:
-    pass
+
+sys.path.append(glob.glob('/home/itayb/simulator/carla_0.98/PythonAPI/carla/dist/carla-*%d.%d-%s.egg' % (
+                            sys.version_info.major,
+                            sys.version_info.minor,
+                            'linux-x86_64'))[0])
 
 import carla
 

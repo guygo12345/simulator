@@ -97,7 +97,16 @@ def depth_to_array(image, scale=None):
         return depth.astype(np.float32)
 
 
-def extract_rotation_from_matrix(rotation_matrix, negate_yaw=False):
+def matrix_from_euler_angles(euler_angles, negate_yaw=False):
+    pitch, yaw, roll = euler_angles
+    if negate_yaw:
+        yaw = -yaw
+    r = Rotation.from_euler('xyz', (pitch, yaw, roll), degrees=True)
+    matrix = r.as_matrix()
+    return matrix
+
+
+def euler_angles_from_matrix(rotation_matrix, negate_yaw=False):
     r = Rotation.from_matrix(rotation_matrix)
     euler_angles = r.as_euler('xyz')  # X (left-right), Y (up-down), Z (forward-backward)
     pitch, yaw, roll = np.rad2deg(euler_angles)  # Y (left-right), Z (up-down), X (forward-backward)
