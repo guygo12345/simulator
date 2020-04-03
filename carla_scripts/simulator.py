@@ -123,6 +123,7 @@ class Simulator(object):
         self.set_fixed_timestep()
         self.set_sync_mode()
         self.me_sensor_manager.player = self.player
+        self.me_sensor_manager.simulation_id = self.simulation_id
         self.me_sensor_manager.init_sensors()
         self.restarting = False
 
@@ -206,6 +207,7 @@ class Simulator(object):
         if self.clip_interval:
             elapsed_seconds = self.get_elapsed_seconds()
             if elapsed_seconds > self.clip_interval + 3:
+                print("Clip interval reached")
                 self.simulation_id = self.map.name + '_' + str(int(time.time()))
                 self.start_time = time.time()
                 need_restart = True

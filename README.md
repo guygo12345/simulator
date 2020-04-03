@@ -4,6 +4,6 @@
 
 cd ~/simulator/gen_dumps/carla_scripts
 
-python3 simulator.py
+python3 run.py
 
 To watch all options run with '-h'
