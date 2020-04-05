@@ -53,15 +53,15 @@ def main():
         '--car_name',
         metavar='car_name',
         default='Alfred',
-        help='The ME car to simulate')
+        help='The ME car to simulate (default: Alfred)')
     argparser.add_argument(
         '--sector',
         metavar='Sector',
         default='main',
-        help='The sector of Cameras. "rand" for random choice')
+        help='The sector of Cameras. "rand" for random choice (default: main)')
     argparser.add_argument(
         '--map_id',
-        metavar='MAPID',
+        metavar='map_id',
         type=int,
         default=0,
         help='map index from world.get_maps(). currently available: 0-6')
@@ -69,12 +69,17 @@ def main():
         '-c', '--clip_interval',
         type=int,
         default=0,
-        help='Start new clip every x seconds')
+        help='Start new clip every x seconds (default - 0, i.e. same for whole run)')
+    argparser.add_argument(
+        '--filter',
+        metavar='PATTERN',
+        default='vehicle.*',
+        help='actor filter (default: "vehicle.*")')
     argparser.add_argument(
         '-v', '--verbose',
         action='store_true',
         dest='debug',
-        help='print debug information')
+        help='print debug information and draw cameras bounding boxes')
     argparser.add_argument(
         '--host',
         metavar='H',
@@ -106,11 +111,6 @@ def main():
         metavar='WIDTHxHEIGHT',
         default='1280x720',
         help='window resolution (default: 1280x720)')
-    argparser.add_argument(
-        '--filter',
-        metavar='PATTERN',
-        default='vehicle.*',
-        help='actor filter (default: "vehicle.*")')
     argparser.add_argument(
         '--rolename',
         metavar='NAME',
