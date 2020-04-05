@@ -4,6 +4,6 @@
 
 cd ~/simulator/gen_dumps/carla_scripts
 
-python3 run.py --map_id=<0-6> --sector=<sector>
+python3 run.py --map_id=< 0-6 > --sector=< sector >
 
 To watch all options run with '-h'
