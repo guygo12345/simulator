@@ -2,6 +2,7 @@ import os
 import json
 import numpy as np
 import cv2
+import random
 from scipy.spatial.transform import Rotation
 from os.path import join, exists
 import carla
@@ -108,7 +109,7 @@ class MECameraManager(object):
 
     @staticmethod
     def get_car_setup(car_name):
-        conf_file_path = 'cameras/setup/{car_name}.json'.format(car_name=car_name)
+        conf_file_path = 'Cameras/setup/{car_name}.json'.format(car_name=car_name)
         with open(conf_file_path, 'r') as f:
             setup = json.load(f)
         return setup
@@ -117,7 +118,10 @@ class MECameraManager(object):
         return self.car_setup['reset_matrix']
 
     def get_sector_setup(self, sector):
-        return self.car_setup[sector]
+        if sector == 'rand':
+            sector = random.choice(list(self.car_setup['views'].keys()))
+            print("Chose random sector - %s" % sector)
+        return self.car_setup['views'][sector]
 
     def get_camera_location(self, cam_name):
         return self.car_setup['cameras_locations'][cam_name]

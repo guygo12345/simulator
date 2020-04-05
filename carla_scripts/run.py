@@ -7,7 +7,6 @@ import pygame
 import time
 from carla_scripts.simulator import Simulator
 from carla_scripts.Utils import *
-from carla_scripts.carla_utils import *
 
 
 def game_loop(args):
@@ -51,6 +50,27 @@ def main():
     argparser = argparse.ArgumentParser(
         description='CARLA Manual Control Client')
     argparser.add_argument(
+        '--car_name',
+        metavar='car_name',
+        default='Alfred',
+        help='The ME car to simulate')
+    argparser.add_argument(
+        '--sector',
+        metavar='Sector',
+        default='main',
+        help='The sector of Cameras. "rand" for random choice')
+    argparser.add_argument(
+        '--map_id',
+        metavar='MAPID',
+        type=int,
+        default=0,
+        help='map index from world.get_maps(). currently available: 0-6')
+    argparser.add_argument(
+        '-c', '--clip_interval',
+        type=int,
+        default=0,
+        help='Start new clip every x seconds')
+    argparser.add_argument(
         '-v', '--verbose',
         action='store_true',
         dest='debug',
@@ -82,25 +102,10 @@ def main():
         default=0,
         help='spawn every x seconds')
     argparser.add_argument(
-        '-c', '--clip_interval',
-        type=int,
-        default=0,
-        help='spawn every x seconds')
-    argparser.add_argument(
         '--res',
         metavar='WIDTHxHEIGHT',
         default='1280x720',
         help='window resolution (default: 1280x720)')
-    argparser.add_argument(
-        '--sector',
-        metavar='Sector',
-        default='main',
-        help='The sector of cameras')
-    argparser.add_argument(
-        '--car_name',
-        metavar='car_name',
-        default='Alfred',
-        help='The ME car to simulate')
     argparser.add_argument(
         '--filter',
         metavar='PATTERN',
@@ -116,12 +121,6 @@ def main():
         default=2.2,
         type=float,
         help='Gamma correction of the camera (default: 2.2)')
-    argparser.add_argument(
-        '--map_id',
-        metavar='MAPID',
-        type=int,
-        default=0,
-        help='map index from world.get_maps()')
     argparser.add_argument(
         '-i', '--id',
         metavar='I',

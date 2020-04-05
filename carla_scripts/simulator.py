@@ -17,18 +17,27 @@ from __future__ import print_function
 # -- find carla module ---------------------------------------------------------
 # ==============================================================================
 
-import carla
 import random
 import signal
 import time
+from time import sleep
+import re
+from subprocess import Popen
+import carla
 
 from carla_scripts.Sensors import *
-from carla_scripts.cameras import *
-from carla_scripts.carla_utils import *
+from carla_scripts.Cameras import *
+from carla_scripts.Utils.sim_utils import get_actor_display_name
 
 # ==============================================================================
 # -- Simulator ---------------------------------------------------------------------
 # ==============================================================================
+
+def find_weather_presets():
+    rgx = re.compile('.+?(?:(?<=[a-z])(?=[A-Z])|(?<=[A-Z])(?=[A-Z][a-z])|$)')
+    name = lambda x: ' '.join(m.group(0) for m in rgx.finditer(x))
+    presets = [x for x in dir(carla.WeatherParameters) if re.match('[A-Z].+', x)]
+    return [(getattr(carla.WeatherParameters, x), name(x)) for x in presets]
 
 
 class Simulator(object):
@@ -283,7 +292,7 @@ class Simulator(object):
         self.player = None
 
     def spawn_npc(self, filterv='vehicle.*', filterw='walker.pedestrian.*'):
-        num_of_actors_dict = {
+        actors_dict = {
             0: [100, 20, True],
             1: [100, 100, False],
             2: [80, 100, False],
@@ -292,7 +301,7 @@ class Simulator(object):
             5: [100, 100, False],
             6: [30, 40, False],
         }
-        num_of_vehicles, num_of_walkers, safe = num_of_actors_dict[self.map_id]
+        num_of_vehicles, num_of_walkers, safe = actors_dict[self.map_id]
         command = "python3 ./Utils/spawn_npc.py -n %s -w %s --filterv %s --filterw %s --on_ground" %\
                   (num_of_vehicles, num_of_walkers, filterv, filterw)
         if safe:

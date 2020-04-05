@@ -1,6 +1,3 @@
-import sys
-import numpy as np
-import re
 from subprocess import Popen
 from time import sleep
 import psutil
@@ -15,7 +12,7 @@ def get_carla_client(host, port, use_ini_file=True, use_opengl=True, low_quality
     if not server_is_running:
         print('Server is down, Trying to run it')
         run_carla_server(use_ini_file, use_opengl, low_quality)
-        sleep(8)
+        sleep(5)
     carla_client = carla.Client(host, port)
     return carla_client
 
@@ -29,13 +26,6 @@ def run_carla_server(use_ini_file=True, use_opengl=True, low_quality=False):
     if low_quality:
         command += ' -quality-level=Low'
     Popen(command.split(" "))
-
-
-def find_weather_presets():
-    rgx = re.compile('.+?(?:(?<=[a-z])(?=[A-Z])|(?<=[A-Z])(?=[A-Z][a-z])|$)')
-    name = lambda x: ' '.join(m.group(0) for m in rgx.finditer(x))
-    presets = [x for x in dir(carla.WeatherParameters) if re.match('[A-Z].+', x)]
-    return [(getattr(carla.WeatherParameters, x), name(x)) for x in presets]
 
 
 def get_actor_display_name(actor, truncate=250):

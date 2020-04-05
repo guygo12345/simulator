@@ -33,8 +33,7 @@ Use ARROWS or WASD keys for control.
 
 import pygame
 import os
-from carla_scripts.carla_utils import *
-import sys
+from carla_scripts.Utils.sim_utils import *
 import datetime
 import math
 import carla

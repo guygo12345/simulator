@@ -1,8 +1,7 @@
 import weakref
-import sys
 import math
 import collections
-from carla_scripts.carla_utils import get_actor_display_name
+from carla_scripts.Utils.sim_utils import get_actor_display_name
 import carla
 
 # ==============================================================================
