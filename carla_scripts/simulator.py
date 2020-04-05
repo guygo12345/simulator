@@ -17,13 +17,6 @@ from __future__ import print_function
 # -- find carla module ---------------------------------------------------------
 # ==============================================================================
 
-import sys
-import glob
-import os
-sys.path.append(glob.glob('/home/itayb/simulator/carla_0.98/PythonAPI/carla/dist/carla-*%d.%d-%s.egg' % (
-                            sys.version_info.major,
-                            sys.version_info.minor,
-                            'linux-x86_64'))[0])
 import carla
 import random
 import signal

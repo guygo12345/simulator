@@ -36,7 +36,7 @@ def filter_frames(base_path, clip, remove_bad=False):
 
 
 def main():
-    base_output_path = '/home/itayb/simulator/gen_dumps/carla_scripts/output'
+    base_output_path = '../carla_scripts/output'
     cars = os.listdir(base_output_path)
     for car in cars:
         # print("Car: " + car)

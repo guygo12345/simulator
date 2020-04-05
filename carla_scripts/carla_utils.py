@@ -6,7 +6,7 @@ from time import sleep
 import psutil
 import carla
 
-SERVER_PATH = '/home/itayb/simulator/carla_0.98/Dist/CARLA_Shipping_0.9.8-34-g4bc53a7f/LinuxNoEditor/CarlaUE4.sh'
+SERVER_PATH = '/opt/carla/bin/CarlaUE4.sh'
 
 
 def get_carla_client(host, port, use_ini_file=True, use_opengl=True, low_quality=False):
