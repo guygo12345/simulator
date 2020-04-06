@@ -2,7 +2,7 @@
 
 ## To run the simulator in terminal:
 
-cd ~/simulator/gen_dumps/carla_scripts
+cd carla_scripts
 
 python3 run.py --map_id=< 0-6 > --sector=< sector >
 
