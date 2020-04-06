@@ -64,13 +64,14 @@ class Simulator(object):
         self._actor_filter = args.filter
         self._gamma = args.gamma
         self.me_sensor_manager = None
-        self.recording_enabled = False
+        self.recording_enabled = args.record
         self.recording_start = 0
         self.world.on_tick(hud.on_world_tick)
         self.spawn_process = None
         self.closest_vehicle_distance = None
         self.spawn_interval = args.spawn_interval
         self.clip_interval = args.clip_interval
+        self.sector = args.sector
         self.me_sensor_manager = MECameraManager(self.world, self.player, simulation_id=self.simulation_id,
                                                  sector=args.sector, car_name=args.car_name)
         self.restarting = False
@@ -165,7 +166,7 @@ class Simulator(object):
     def set_camera_manager(self):
         cam_index = self.camera_manager.index if self.camera_manager is not None else 0
         cam_pos_index = self.camera_manager.transform_index if self.camera_manager is not None else 0
-        self.camera_manager = CameraManager(self.player, self.hud, self._gamma)
+        self.camera_manager = CameraManager(self.player, self.hud, self._gamma, self.recording_enabled)
         self.camera_manager.transform_index = cam_pos_index
         self.camera_manager.set_sensor(cam_index, notify=False)
 
@@ -211,6 +212,8 @@ class Simulator(object):
             if elapsed_seconds > self.clip_interval + 3:
                 print("Clip interval reached")
                 self.simulation_id = self.map.name + '_' + str(int(time.time()))
+                self.me_sensor_manager.update_sector(self.sector)
+                self.me_sensor_manager.update_output_dir()
                 self.start_time = time.time()
                 need_restart = True
 

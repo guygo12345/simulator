@@ -89,17 +89,19 @@ class MECameraManager(object):
     def __init__(self, world, player, simulation_id, sector, car_name, capture_frequency=0.5, output_dir=None):
         self.world = world
         self.player = player
-        self.output_dir = MECameraManager.config_out_dir(output_dir, car_name, sector)
         self.simulation_id = simulation_id
-        self.sector = sector
         self.car_name = car_name
         self.car_setup = MECameraManager.get_car_setup(self.car_name)
+        self.sector = None
+        self.update_sector(sector)
+        self.output_dir = None
+        self.update_output_dir()
         self.center_view_frame_data_with_depth = None
         self.capture_frequency = capture_frequency
         self.sensors_list = []
 
     @staticmethod
-    def config_out_dir(output_dir, car_name, sector):
+    def config_out_dir(car_name, sector, output_dir=None):
         if output_dir:
             return output_dir
         else:
@@ -114,13 +116,19 @@ class MECameraManager(object):
             setup = json.load(f)
         return setup
 
+    def update_sector(self, sector):
+        if sector == 'rand':
+            sector = random.choice(list(self.car_setup['views'].keys()))
+            print("Chose random sector - %s" % sector)
+        self.sector = sector
+
+    def update_output_dir(self):
+        self.output_dir = MECameraManager.config_out_dir(self.car_name, self.sector)
+
     def get_reset_matrix(self):
         return self.car_setup['reset_matrix']
 
     def get_sector_setup(self, sector):
-        if sector == 'rand':
-            sector = random.choice(list(self.car_setup['views'].keys()))
-            print("Chose random sector - %s" % sector)
         return self.car_setup['views'][sector]
 
     def get_camera_location(self, cam_name):

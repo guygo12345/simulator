@@ -1,7 +1,7 @@
 import weakref
-import sys
 import pygame
 import numpy as np
+import time
 import carla
 from carla import ColorConverter as cc
 
@@ -11,12 +11,13 @@ from carla import ColorConverter as cc
 
 
 class CameraManager(object):
-    def __init__(self, parent_actor, hud, gamma_correction):
+    def __init__(self, parent_actor, hud, gamma_correction, recording):
         self.sensor = None
         self.surface = None
         self._parent = parent_actor
         self.hud = hud
-        self.recording = False
+        self.recording = recording
+        self.start_time = time.time()
         bound_y = 0.5 + self._parent.bounding_box.extent.y
         Attachment = carla.AttachmentType
         self._camera_transforms = [
@@ -117,5 +118,5 @@ class CameraManager(object):
             array = array[:, :, :3]
             array = array[:, :, ::-1]
             self.surface = pygame.surfarray.make_surface(array.swapaxes(0, 1))
-        if self.recording:
-            image.save_to_disk('_out/%08d' % image.frame)
+        if self.recording and image.frame % self.recording == 0:
+            image.save_to_disk('_out/%s/%08d' % (self.start_time, image.frame))

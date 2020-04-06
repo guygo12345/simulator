@@ -15,12 +15,13 @@ def game_loop(args):
     simulator = None
 
     try:
-        client = get_carla_client(args.host, args.port, low_quality=args.low_quality)
+        client = get_carla_client(args.host, args.port, low_quality=args.low_quality, off_screen=args.off_screen)
         client.set_timeout(10.0)
 
-        display = pygame.display.set_mode(
-            (args.width, args.height),
-            pygame.HWSURFACE | pygame.DOUBLEBUF)
+        if not args.off_screen:
+            display = pygame.display.set_mode(
+                (args.width, args.height),
+                pygame.HWSURFACE | pygame.DOUBLEBUF)
 
         hud = HUD(args.width, args.height)
         simulator = Simulator(client, hud, args)
@@ -32,8 +33,9 @@ def game_loop(args):
             if controller.parse_events(client, simulator, clock):
                 return
             simulator.tick(clock)
-            simulator.render(display)
-            pygame.display.flip()
+            if not args.off_screen:
+                simulator.render(display)
+                pygame.display.flip()
 
     finally:
 
@@ -81,6 +83,12 @@ def main():
         dest='debug',
         help='print debug information and draw cameras bounding boxes')
     argparser.add_argument(
+        '-r', '--record_interval',
+        type=int,
+        default=0,
+        dest='record',
+        help='Record simulator (not ME sensors!) images every x seconds')
+    argparser.add_argument(
         '--host',
         metavar='H',
         default='127.0.0.1',
@@ -98,9 +106,12 @@ def main():
         help='enable autopilot')
     argparser.add_argument(
         '-l', '--low_quality',
-        type=bool,
-        default=False,
+        action='store_true',
         help='run in low quality')
+    argparser.add_argument(
+        '--off_screen',
+        action='store_true',
+        help='run in off screen')
     argparser.add_argument(
         '-s', '--spawn_interval',
         type=int,
