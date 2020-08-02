@@ -2,21 +2,21 @@
 	"reset_matrix" :
 	[
 		[1.0, 0.0, 0.0, 0.0 ],
-        [0.0, 1.0, 0.0, 1.5 ],
-        [0.0, 0.0, 1.0, 0.25],
+        [0.0, 1.0, 0.0, 1.45 ],
+        [0.0, 0.0, 1.0, 0.6 ],
         [0.0, 0.0, 0.0, 1.0 ]
 	],
 	"cameras_locations":
 	{
 		"main" : [0,0,0],
-		"parking_front" : [-0.0202747 , -0.57572889,  1.6183729 ],
-		"frontCornerLeft" : [-0.57329735,  0.19517756, -0.6512264 ],
-		"frontCornerRight" : [ 0.54707725,  0.18970009, -0.66327275],
-		"parking_right" : [ 1.03675344, -0.27166242, -0.1256023 ],
-		"parking_left" : [-1.06188823, -0.2601795 , -0.08085709],
-		"parking_rear" : [-0.1357, -0.5887, -1.7],
-		"rearCornerLeft" : [-0.91701485, -0.43606824,  0.30566906],
-		"rearCornerRight" : [ 0.87715972, -0.44439549,  0.28700274],
+		"parking_front" : [-0.0202747 , -0.57572889,  1.3183729 ],
+		"frontCornerLeft" : [-0.57329735,  0.17517756, -0.6512264 ],
+		"frontCornerRight" : [ 0.54707725,  0.17517756, -0.66327275],
+			"parking_right" : [ 0.93675344, -0.27166242, -0.0756023 ],
+			"parking_left" : [ -0.93675344, -0.27166242 , -0.0756023],
+			"parking_rear" : [-0.0050147 , -0.63424109, -2.76256135],
+			"rearCornerLeft" : [-0.76701485, -0.57806824,  0.30566906],
+		"rearCornerRight" : [ 0.76701485, -0.57806824,  0.30566906],
 		"rear": [-6.53422491e-04,  8.90010562e-02, -2.06491312e+00]
 	},
 	"sectors" : {
@@ -56,6 +56,7 @@
 			"focal": 295.0,
 			"scale": 2.0,
 			"cams": [
+				"main",
 				"frontCornerLeft",
 				"parking_left",
 				"parking_front"
@@ -76,6 +77,7 @@
 			"focal": 295.0,
 			"scale": 2.0,
 			"cams": [
+				"main",
 				"frontCornerRight",
 				"parking_right",
 				"parking_front"
@@ -96,6 +98,7 @@
 			"focal": 295.0,
 			"scale": 2.0,
 			"cams": [
+				"main",
 				"rearCornerLeft",
 				"parking_left",
 				"parking_rear"
@@ -116,6 +119,7 @@
 			"focal": 295.0,
 			"scale": 2.0,
 			"cams": [
+				"main",
 				"rearCornerRight",
 				"parking_right",
 				"parking_rear"
@@ -136,6 +140,7 @@
 			"focal": 728.5,
 			"scale": 2.0,
 			"cams": [
+				"main",
 				"rear",
 				"rearCornerLeft",
 				"rearCornerRight",

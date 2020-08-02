@@ -12,8 +12,8 @@
 		"parking_front" : [0.0, -0.5, 1.7],
 		"frontCornerLeft" : [-0.5342, 0.2023, -0.3],
 		"frontCornerRight" : [0.5342, 0.2023, -0.3],
-		"parking_right" : [0.9, -0.2333, -0.1162],
-		"parking_left" : [-0.9, -0.2333, -0.1162],
+		"parking_right" : [1.0572, -0.2333, -0.1162],
+		"parking_left" : [-1.0572, -0.2333, -0.1162],
 		"parking_rear" : [-0.1357, -0.5887, -1.7],
 		"rearCornerLeft" : [-0.9, -0.4276, 0.311],
 		"rearCornerRight" : [0.9, -0.4276, 0.311]
@@ -34,7 +34,10 @@
 			"focal": 728.5,
 			"scale": 2.0,
 			"cams": [
-				"main"
+				"main",
+				"frontCornerLeft",
+				"frontCornerRight",
+				"parking_front"
 			]
 		},
 		"frontCornerLeft": {
