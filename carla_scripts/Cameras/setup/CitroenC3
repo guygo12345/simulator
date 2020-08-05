@@ -1,0 +1,146 @@
+{
+	"reset_matrix" :
+	[
+		[1.0, 0.0, 0.0, 0.0 ],
+        [0.0, 1.0, 0.0, 1.45 ],
+        [0.0, 0.0, 1.0, 0.6 ],
+        [0.0, 0.0, 0.0, 1.0 ]
+	],
+	"cameras_locations":
+	{
+		"main" : [0.0,0.0,0.0],
+		"parking_front" : [-0.0202747 , -0.57572889,  1.3183729 ],
+		"frontCornerLeft" : [-0.57329735,  0.17517756, -0.6512264 ],
+		"frontCornerRight" : [ 0.54707725,  0.17517756, -0.66327275],
+		"parking_right" : [ 0.93675344, -0.27166242, -0.0756023 ],
+		"parking_left" : [ -0.93675344, -0.27166242 , -0.0756023],
+		"parking_rear" : [-0.0050147 , -0.63424109, -2.76256135],
+		"rearCornerLeft" : [-0.76701485, -0.57806824,  0.30566906],
+		"rearCornerRight" : [ 0.76701485, -0.57806824,  0.30566906],
+		"rear": [-6.53422491e-04,  8.90010562e-02, -2.06491312e+00]
+	},
+	"sectors" : {
+		"main": {
+			"R_to_main": [
+				0.0,
+				0.0,
+				0.0
+			],
+			"origin": [
+				360.0,
+				155.0
+			],
+			"width": 720,
+			"height": 310,
+			"focal": 728.5,
+			"scale": 2.0,
+			"cams": [
+				"main",
+				"frontCornerLeft",
+				"frontCornerRight",
+				"parking_front"
+			]
+		},
+		"frontCornerLeft": {
+			"R_to_main": [
+				-2.1513520533433814,
+  				-47.10982070910595,
+				-0.195535226452387
+			],
+			"origin": [
+				360.0,
+				155.0
+			],
+			"width": 720,
+			"height": 310,
+			"focal": 295.0,
+			"scale": 2.0,
+			"cams": [
+				"frontCornerLeft",
+				"parking_left",
+				"parking_front"
+			]
+		},
+		"frontCornerRight": {
+			"R_to_main": [
+				-0.9007638642313321,
+  				46.37640848868756,
+  				-0.03557188770407022
+			],
+			"origin": [
+				360.0,
+				155.0
+			],
+			"width": 720,
+			"height": 310,
+			"focal": 295.0,
+			"scale": 2.0,
+			"cams": [
+				"frontCornerRight",
+				"parking_right",
+				"parking_front"
+			]
+		},
+		"rearCornerLeft": {
+			"R_to_main": [
+				3.2804077264139377,
+				-132.23151368700172,
+				-0.9297222521798936
+			],
+			"origin": [
+				360.0,
+				155.0
+			],
+			"width": 720,
+			"height": 310,
+			"focal": 295.0,
+			"scale": 2.0,
+			"cams": [
+				"rearCornerLeft",
+				"parking_left",
+				"parking_rear"
+			]
+		},
+		"rearCornerRight": {
+			"R_to_main": [
+				2.288213159624551,
+				132.39067534265328,
+				0.35224106039605285
+			],
+			"origin": [
+				360.0,
+				155.0
+			],
+			"width": 720,
+			"height": 310,
+			"focal": 295.0,
+			"scale": 2.0,
+			"cams": [
+				"rearCornerRight",
+				"parking_right",
+				"parking_rear"
+			]
+		},
+		"rear": {
+			"R_to_main": [
+				2.826892001468974,
+				-178.9928097980359,
+				-0.4156709358882609
+			],
+			"origin": [
+				360.0,
+				155.0
+			],
+			"width": 720,
+			"height": 310,
+			"focal": 728.5,
+			"scale": 2.0,
+			"cams": [
+				"rear",
+				"rearCornerLeft",
+				"rearCornerRight",
+				"parking_rear"
+			]
+		}
+	}
+}
